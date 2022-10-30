@@ -1,0 +1,14 @@
+@import '../../../../../utils/styles/mixins.less';
+
+.offer-gift-card {
+    border: 3px solid;
+    border-color: transparent;
+    border-radius: var(--border-radius-primary);
+    padding: var(--space);
+    cursor: pointer;
+
+    &--selected {
+        .transition();
+        border-color: var(--color-primary);
+    }
+}
