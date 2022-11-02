@@ -1,0 +1,19 @@
+@import '../../../utils/styles/utility.less';
+@import '../../../utils/styles/mixins.less';
+
+.offer-content {
+    padding: var(--space-s);
+    border: var(--border-primary);
+    border-radius: var(--border-radius-tertiary);
+
+    &--primary {
+        color: var(--color-primary);
+    }
+
+    &__row {
+        font-weight: 700;
+        font-size: var(--font-size-m);
+        .flexbox(@justifyContent: space-between);
+        margin-bottom: var(--space);
+    }
+}

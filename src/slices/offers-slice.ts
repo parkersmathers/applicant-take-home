@@ -5,11 +5,13 @@ import { RootState } from '../store';
 export interface OffersState {
     offers?: PrizeoutOffers;
     offerSelected?: PrizeoutOffer;
+    offerValueSelected?: PrizeoutOfferValueOptions;
 }
 
 // Define the initial state
 export const offersInitialState: OffersState = {
     offerSelected: null,
+    offerValueSelected: null,
     offers: [
         {
             data: [
@@ -689,7 +691,7 @@ export type PrizeoutOffer = {
     tag: string;
 };
 
-type PrizeoutOfferValueOptions = {
+export type PrizeoutOfferValueOptions = {
     checkout_value_id: string;
     cost_in_cents: number;
     display_bonus?: number;
@@ -707,6 +709,11 @@ export const offersSlice = createSlice({
     reducers: {
         setSelectedOffer(state, action: PayloadAction<PrizeoutOffer>) {
             state.offerSelected = action.payload;
+            // reset offer value
+            state.offerValueSelected = null;
+        },
+        setSelectedOfferValue(state, action: PayloadAction<PrizeoutOfferValueOptions>) {
+            state.offerValueSelected = action.payload;
         },
     },
 });
@@ -715,6 +722,8 @@ export const selectOffers = ({ offers }: RootState): PrizeoutOffers => offers.of
 
 export const selectOffer = ({ offers }: RootState): PrizeoutOffer => offers.offerSelected;
 
-export const { setSelectedOffer } = offersSlice.actions;
+export const selectOfferValue = ({ offers }: RootState): PrizeoutOfferValueOptions => offers.offerValueSelected;
+
+export const { setSelectedOffer, setSelectedOfferValue } = offersSlice.actions;
 
 export default offersSlice.reducer;

@@ -1,11 +1,28 @@
-@import "../../../utils/styles/utility.less";
+@import '../../../utils/styles/utility.less';
 
 .checkout {
-	padding: var(--space-inner);
-	
-	&__brand {
-		overflow: auto;
-	}
+    padding: var(--space-inner);
+
+    &__brand {
+        overflow: auto;
+        margin-bottom: var(--space-xl);
+
+        .gift-card__name {
+            font-size: var(--font-size-s);
+        }
+    }
+
+    &__options {
+        margin-bottom: var(--space-s);
+
+        h4 {
+            margin-bottom: var(--space-m);
+        }
+
+        > div {
+            display: grid;
+            gap: 0.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(4rem, 1fr));
+        }
+    }
 }
-
-

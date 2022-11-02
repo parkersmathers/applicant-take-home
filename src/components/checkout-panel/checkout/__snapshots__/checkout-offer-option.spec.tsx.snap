@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test Checkout Offer Option Component Component matches snapshot 1`] = `
+<DocumentFragment>
+  <button
+    aria-label="$49.00"
+    class="button button--small mr-xs mb-xs"
+    data-testid="button"
+    id="test-checkout-id"
+    title="$49.00"
+    type="button"
+  >
+    <span>
+      $49.00
+    </span>
+  </button>
+</DocumentFragment>
+`;
