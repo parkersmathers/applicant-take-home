@@ -1,4 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { CheckoutItem, checkoutOffer } from '../api/prizeout';
 import { RootState } from '../store';
 
 // Define a type for the slice state
@@ -6,6 +7,7 @@ export interface OffersState {
     offers?: PrizeoutOffers;
     offerSelected?: PrizeoutOffer;
     offerValueSelected?: PrizeoutOfferValueOptions;
+    status: StatusEnum;
 }
 
 // Define the initial state
@@ -662,6 +664,7 @@ export const offersInitialState: OffersState = {
             type: 'vertical-offers',
         },
     ],
+    status: 'idle',
 };
 
 type PrizeoutOffers = PrizeoutOfferViews[];
@@ -703,18 +706,42 @@ type OffersRequest = {
     prizeoutSessionId: string;
 };
 
+// loading state for requests
+type StatusEnum = 'idle' | 'pending' | 'succeeded' | 'failed';
+
+export const purchaseGiftCard = createAsyncThunk('checkout/offers', async (item: CheckoutItem) => {
+    const response = await checkoutOffer(item);
+    return response;
+});
+
 export const offersSlice = createSlice({
     initialState: offersInitialState,
     name: 'offers',
     reducers: {
         setSelectedOffer(state, action: PayloadAction<PrizeoutOffer>) {
             state.offerSelected = action.payload;
-            // reset offer value
+            // reset offer value & status
             state.offerValueSelected = null;
+            state.status = 'idle';
         },
         setSelectedOfferValue(state, action: PayloadAction<PrizeoutOfferValueOptions>) {
             state.offerValueSelected = action.payload;
         },
+    },
+    // eslint-disable-next-line sort-keys
+    extraReducers: (builder) => {
+        builder
+            .addCase(purchaseGiftCard.pending, (state) => {
+                state.status = 'pending';
+            })
+            .addCase(purchaseGiftCard.fulfilled, (state) => {
+                state.status = 'succeeded';
+                state.offerSelected = null;
+                state.offerValueSelected = null;
+            })
+            .addCase(purchaseGiftCard.rejected, (state) => {
+                state.status = 'failed';
+            });
     },
 });
 
@@ -723,6 +750,8 @@ export const selectOffers = ({ offers }: RootState): PrizeoutOffers => offers.of
 export const selectOffer = ({ offers }: RootState): PrizeoutOffer => offers.offerSelected;
 
 export const selectOfferValue = ({ offers }: RootState): PrizeoutOfferValueOptions => offers.offerValueSelected;
+
+export const selectStatus = ({ offers: { status } }: RootState): StatusEnum => status;
 
 export const { setSelectedOffer, setSelectedOfferValue } = offersSlice.actions;
 

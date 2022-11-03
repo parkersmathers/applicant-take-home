@@ -1,7 +1,21 @@
 @import '../../../utils/styles/utility.less';
+@import '../../../utils/styles/mixins.less';
 
 .checkout {
     padding: var(--space-inner);
+
+    &__active {
+        animation: fadeIn 0.5s ease-in;
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+    }
 
     &__brand {
         overflow: auto;

@@ -1,10 +1,13 @@
 import React, { useEffect } from 'react';
+import ClassNames from 'classnames';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../../../hooks';
+import { setCheckoutView } from '../../../slices/checkout-slice';
 import {
     PrizeoutOfferValueOptions,
     selectOffer,
     selectOfferValue,
+    selectStatus,
     setSelectedOfferValue,
 } from '../../../slices/offers-slice';
 import { AppDispatch } from '../../../store';
@@ -20,6 +23,9 @@ const CheckoutPanelView: React.FC = (): React.ReactElement => {
     const dispatch = useDispatch<AppDispatch>();
     const offer = useAppSelector(selectOffer);
     const offerValue = useAppSelector(selectOfferValue);
+    const offerStatus = useAppSelector(selectStatus);
+
+    const classes = ClassNames('grid__item', { checkout__active: offerValue !== null });
 
     useEffect(() => {
         if (offer && !offerValue) {
@@ -27,6 +33,13 @@ const CheckoutPanelView: React.FC = (): React.ReactElement => {
             dispatch(setSelectedOfferValue(option));
         }
     }, [offer, offerValue]);
+
+    useEffect(() => {
+        if (offerStatus === 'succeeded') {
+            // when gift card is successfully purchased show confirmation view
+            dispatch(setCheckoutView('checkout-confirmation'));
+        }
+    }, [offerStatus]);
 
     const onClickHandler = (option: PrizeoutOfferValueOptions) => {
         dispatch(setSelectedOfferValue(option));
@@ -38,6 +51,7 @@ const CheckoutPanelView: React.FC = (): React.ReactElement => {
                 key={option.checkout_value_id}
                 checkoutId={option.checkout_value_id}
                 cost={option.cost_in_cents}
+                isDisabled={offerStatus === 'pending'}
                 clickHandler={() => onClickHandler(option)}
             />
         ));
@@ -46,7 +60,7 @@ const CheckoutPanelView: React.FC = (): React.ReactElement => {
     return (
         <section className="checkout">
             <div className="grid grid--top-bottom grid--stretch-top">
-                <div className="grid__item">
+                <div className={classes}>
                     <section className="checkout__brand">
                         {offer && (
                             <GiftCard

@@ -7,12 +7,14 @@ import { Button } from '../../common';
 interface CheckoutOfferOptionProps {
     checkoutId: string;
     cost: number;
+    isDisabled: boolean;
     clickHandler: () => void;
 }
 
 const CheckoutOfferOption: React.FC<CheckoutOfferOptionProps> = ({
     checkoutId,
     cost,
+    isDisabled,
     clickHandler,
 }): React.ReactElement => {
     const selectedOfferValue = useAppSelector(selectOfferValue);
@@ -36,6 +38,7 @@ const CheckoutOfferOption: React.FC<CheckoutOfferOptionProps> = ({
             size="small"
             type="button"
             className={classes}
+            isDisabled={isDisabled}
             onClick={() => clickHandler()}
         />
     );
